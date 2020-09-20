@@ -1,1 +1,4 @@
 export const _prod_ = process.env.NODE_ENV === 'production';
+export const COOKIE_NAME = 'qid';
+export const SESSION_SECRET =
+	'Fortitude.sesesesesesesesesesesesesesesesesesesese';

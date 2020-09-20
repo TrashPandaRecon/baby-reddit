@@ -20,12 +20,32 @@
     "url": "https://github.com/TrashPandaRecon/baby/issues"
   },
   "homepage": "https://github.com/TrashPandaRecon/baby#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "./src/**.{js,jsx,ts,tsx}": [
+      "npx prettier ./prettierrc --write",
+      "./node_modules/.bin/eslint src/* --fix-dry-run"
+    ]
+  },
   "devDependencies": {
     "@types/connect-redis": "^0.0.14",
+    "@types/cors": "^2.8.7",
     "@types/express": "^4.17.8",
     "@types/express-session": "^1.17.0",
     "@types/node": "^14.11.1",
     "@types/redis": "^2.8.27",
+    "@typescript-eslint/eslint-plugin": "^4.1.1",
+    "@typescript-eslint/parser": "^4.1.1",
+    "eslint": "^7.9.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.3.0",
+    "lint-staged": "^10.4.0",
     "nodemon": "^2.0.4",
     "prettier": "^2.1.2",
     "ts-node": "^9.0.0",

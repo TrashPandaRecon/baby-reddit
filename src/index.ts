@@ -1,6 +1,6 @@
 import { MikroORM } from '@mikro-orm/core';
 import 'reflect-metadata';
-import { _prod_ } from './constants';
+import { COOKIE_NAME, SESSION_SECRET, _prod_ } from './constants';
 import microConfig from './mikro-orm.config';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
@@ -12,6 +12,7 @@ import redis from 'redis';
 import session from 'express-session';
 import connectRedis from 'connect-redis';
 import { MyContext } from './types';
+import cors from 'cors';
 
 const main = async () => {
 	const orm = await MikroORM.init(microConfig);
@@ -19,10 +20,15 @@ const main = async () => {
 	const app = express();
 	const RedisStore = connectRedis(session);
 	const redisClient = redis.createClient();
-
+	app.use(
+		cors({
+			credentials: true,
+			origin: 'http://localhost:3000',
+		}),
+	);
 	app.use(
 		session({
-			name: 'qid',
+			name: COOKIE_NAME,
 			store: new RedisStore({
 				client: redisClient,
 				disableTouch: true,
@@ -34,9 +40,9 @@ const main = async () => {
 				secure: _prod_, // cookie only works in https
 			},
 			saveUninitialized: false,
-			secret: 'Fortitude.sesesesesesesesesesesesesesesesesesesese',
+			secret: SESSION_SECRET,
 			resave: false,
-		})
+		}),
 	);
 	const apolloServer = new ApolloServer({
 		schema: await buildSchema({
@@ -45,7 +51,10 @@ const main = async () => {
 		}),
 		context: ({ req, res }): MyContext => ({ em: orm.em, req, res }),
 	});
-	apolloServer.applyMiddleware({ app });
+	apolloServer.applyMiddleware({
+		app,
+		cors: false,
+	});
 	app.listen(4000, () => {
 		console.log('server started on localhost:4000');
 	});

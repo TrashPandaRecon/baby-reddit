@@ -11,6 +11,7 @@ import {
 import argon2 from 'argon2';
 import { User } from '../entities/User';
 import { MyContext } from '../types';
+import { COOKIE_NAME } from '../constants';
 
 @InputType()
 class UsernamePasswordInput {
@@ -52,7 +53,7 @@ export class UserResolver {
 			return {
 				errors: [
 					{
-						field: 'Username',
+						field: 'username',
 						message:
 							'Username must be more than 2 characters long.',
 					},
@@ -63,7 +64,7 @@ export class UserResolver {
 			return {
 				errors: [
 					{
-						field: 'Password',
+						field: 'password',
 						message:
 							'Username must be more than 4 characters long.',
 					},
@@ -126,5 +127,23 @@ export class UserResolver {
 		return {
 			user,
 		};
-	}
+        }
+        @Mutation(() => Boolean)
+        logout(@Ctx() {req,res}: MyContext){
+                return new Promise((resolve) =>
+                        req.session?.destroy((err) =>
+                        {
+                                res.clearCookie(COOKIE_NAME);
+                                if (err) {
+                                        console.log(err)
+                                        resolve(false)
+                                        return
+                                }
+                        
+                                resolve(true)
+                        })
+                );
+                
+                
+        }
 }
