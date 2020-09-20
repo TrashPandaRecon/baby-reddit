@@ -1,3 +1,8 @@
 {
-        "git.ignoreLimitWarning": true
+        "git.ignoreLimitWarning": true,
+        "editor.formatOnPaste": true,
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "typescript.format.placeOpenBraceOnNewLineForFunctions": true,
+        "prettier.useEditorConfig": false
 }
