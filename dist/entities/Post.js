@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Post = void 0;
+<<<<<<< HEAD
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 let Post = class Post extends typeorm_1.BaseEntity {
@@ -21,20 +22,43 @@ let Post = class Post extends typeorm_1.BaseEntity {
 __decorate([
     type_graphql_1.Field(),
     typeorm_1.PrimaryGeneratedColumn(),
+=======
+const core_1 = require("@mikro-orm/core");
+const type_graphql_1 = require("type-graphql");
+let Post = class Post {
+    constructor() {
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+    }
+};
+__decorate([
+    type_graphql_1.Field(() => type_graphql_1.Int),
+    core_1.PrimaryKey(),
+>>>>>>> 955eba4194044fe0b572cf9f626d7e4092b2b3a5
     __metadata("design:type", Number)
 ], Post.prototype, "id", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
+<<<<<<< HEAD
     typeorm_1.CreateDateColumn(),
     __metadata("design:type", Date)
 ], Post.prototype, "createdAt", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.UpdateDateColumn(),
+=======
+    core_1.Property({ type: 'date' }),
+    __metadata("design:type", Object)
+], Post.prototype, "createdAt", void 0);
+__decorate([
+    type_graphql_1.Field(() => String),
+    core_1.Property({ type: 'date', onUpdate: () => new Date() }),
+>>>>>>> 955eba4194044fe0b572cf9f626d7e4092b2b3a5
     __metadata("design:type", Object)
 ], Post.prototype, "updatedAt", void 0);
 __decorate([
     type_graphql_1.Field(),
+<<<<<<< HEAD
     typeorm_1.Column(),
     __metadata("design:type", String)
 ], Post.prototype, "title", void 0);
@@ -56,6 +80,14 @@ __decorate([
 Post = __decorate([
     type_graphql_1.ObjectType(),
     typeorm_1.Entity()
+=======
+    core_1.Property({ type: 'text' }),
+    __metadata("design:type", String)
+], Post.prototype, "title", void 0);
+Post = __decorate([
+    type_graphql_1.ObjectType(),
+    core_1.Entity()
+>>>>>>> 955eba4194044fe0b572cf9f626d7e4092b2b3a5
 ], Post);
 exports.Post = Post;
 //# sourceMappingURL=Post.js.map
