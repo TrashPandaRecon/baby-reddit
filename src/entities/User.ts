@@ -5,9 +5,11 @@ import
         Column,
         CreateDateColumn,
         Entity,
+        OneToMany,
         PrimaryGeneratedColumn,
         UpdateDateColumn
     } from 'typeorm';
+import {Post} from './Post';
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
@@ -32,5 +34,8 @@ export class User extends BaseEntity {
 
 	@Field(() => String)
 	@Column({ unique: true })
-	email!: string;
+    email!: string;
+    
+    @OneToMany(() => Post, post => post.creator)
+    posts: Post[];
 }

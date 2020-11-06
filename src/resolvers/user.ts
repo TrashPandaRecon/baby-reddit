@@ -28,8 +28,6 @@ export class UserResolver {
 		if (isPassword != null) {
 			return isPassword;
 		}
-		console.log('STARTING');
-
 		const key = FORGET_PASSWORD_PREFIX + token;
 		const userId = await redis.get(key);
 		if (userId == null) {
@@ -58,7 +56,7 @@ export class UserResolver {
 			{ id: userIntId },
 			{ password: await argon2.hash(password) },
 		);
-
+        // deletes key that enables the user with said key to reset password    
 		redis.del(key);
 		// logs the user in
 		req.session!.userId = user.id;
