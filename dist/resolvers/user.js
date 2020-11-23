@@ -71,7 +71,7 @@ let UserResolver = class UserResolver {
                     ],
                 };
             }
-            yield User_1.User.update({ id: userIntId }, { password: yield argon2_1.default.hash(password) });
+            yield User_1.User.update({ id: userIntId }, { password: yield argon2_1.default.hash(Password_1.SaltPassword(password)) });
             redis.del(key);
             req.session.userId = user.id;
             return {
@@ -111,7 +111,7 @@ let UserResolver = class UserResolver {
             if (emailExists) {
                 return emailExists;
             }
-            const hashedPassword = yield argon2_1.default.hash(input.password);
+            const hashedPassword = yield argon2_1.default.hash(Password_1.SaltPassword(input.password));
             let user;
             try {
                 const result = yield typeorm_1.getConnection()
@@ -145,7 +145,7 @@ let UserResolver = class UserResolver {
             if (exists) {
                 return exists;
             }
-            const verify = yield argon2_1.default.verify(user.password, password);
+            const verify = yield argon2_1.default.verify(user.password, Password_1.SaltPassword(password));
             if (!verify) {
                 return {
                     errors: [

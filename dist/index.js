@@ -34,7 +34,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         username: 'postgres',
         password: 'postgres',
         logging: true,
-        synchronize: false,
+        synchronize: true,
         entities: [Post_1.Post, User_1.User],
     });
     const app = express_1.default();

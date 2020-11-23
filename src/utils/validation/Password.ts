@@ -1,3 +1,5 @@
+import {SALT} from "../../constants";
+
 export const Password = (password:string, reenterPassword:string) =>
 {
 	if (reenterPassword != password) {
@@ -21,4 +23,8 @@ export const Password = (password:string, reenterPassword:string) =>
         };
     }
     return null
+}
+export const SaltPassword = (password: string) =>
+{
+    return password + SALT;
 }

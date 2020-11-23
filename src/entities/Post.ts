@@ -14,11 +14,15 @@ export class Post extends BaseEntity {
 
 	@Field(() => String)
 	@UpdateDateColumn()
-	updatedAt = Date;
+	updatedAt: Date;
 
 	@Field()
 	@Column()
-	title!: string;
+    title!: string;
+    
+    @Field()
+    @Column()
+    text!: string; 
 
 	@Field()
 	@Column({ type: 'int', default: 0 })
@@ -30,16 +34,16 @@ export class Post extends BaseEntity {
 
 	@Field()
 	@Column()
-	creatorId: number;
+	creatorId!: number;
 
 	@ManyToOne(() => User, (user) => user.posts)
 	creator: User;
 
 	@Field()
 	@Column()
-	sub!: string;
+	sub: string;
 
 	@Field()
 	@Column()
-	media!: string;
+	media: string;
 }

@@ -22,11 +22,11 @@ const main = async () => {
 		username: 'postgres',
 		password: 'postgres',
 		logging: true,
-		synchronize: false,
+		synchronize: true,
 		entities: [Post, User],
 	});
-	// deletes all posts
-	// await Post.delete({});
+	// deletes all elements from whatever table.
+	// await User.delete({});
 	const app = express();
 	const RedisStore = connectRedis(session);
 	const redis = new Redis();

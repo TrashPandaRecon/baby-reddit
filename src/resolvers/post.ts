@@ -1,6 +1,21 @@
-import {Arg, Int, Mutation, Query, Resolver} from 'type-graphql';
+import {Arg, Ctx, Field, InputType, Int, Mutation, Query, Resolver, UseMiddleware} from 'type-graphql';
 import {Post} from '../entities/Post';
+import {isUserAuth} from '../middleware/isUserAuth';
+import {MyContext} from '../types';
+import {PostResponse} from '../utils/responseModels/PostResponse';
 
+@InputType()
+class PostInput
+{
+    @Field()
+    title: string
+    @Field()
+    text: string
+    @Field()
+    media?: string
+    @Field()
+    sub?: string
+}
 @Resolver()
 export class PostResolver {
 	@Query(() => [Post])
@@ -11,33 +26,44 @@ export class PostResolver {
 	post(@Arg('id', () => Int) id: number): Promise<Post | undefined> {
 		return Post.findOne(id);
 	}
-	@Mutation(() => Post)
+	@Mutation(() => PostResponse)
+    @UseMiddleware(isUserAuth)
 	async createPost(
-		@Arg('title') title: string,
-		@Arg('post') post: string,
-		@Arg('media') media: string,
-		@Arg('sub') sub: string,
-	): Promise<Post> {
-		return Post.create({ title, post, media, sub }).save();
+        @Arg("input") input: PostInput,
+        @Ctx() {req}: MyContext
+    ): Promise<PostResponse | Post>
+    {
+        if (!input.sub) {
+            return {
+                errors: [
+                    {
+                        field: "sub",
+                        message: "sub cannot be null"
+                }]
+            }
+        }
+        return  Post.create({
+                ...input,
+                creatorId: req.session!.userId,
+            }).save()
 	}
-	@Mutation(() => Post)
+    @Mutation(() => Post)
+    @UseMiddleware(isUserAuth)
 	async updatePost(
 		@Arg('id', () => Int) id: number,
-		@Arg('title', () => String) title: string,
-		@Arg('post') post: string,
-		@Arg('media') media: string,
-		@Arg('sub') sub: string,
+		@Arg("details") details: PostInput,
 	): Promise<Post | null> {
 		const postExists = await Post.findOne(id)
 		if (!postExists) {
 			return null;
 		}
-        if (typeof title !== 'undefined') {
-            await Post.update({id}, {title, post, media, sub});
+        if (typeof details.title !== 'undefined') {
+            await Post.update({id}, details);
 		}
 		return postExists
 	}
 	@Mutation(() => Boolean)
+    @UseMiddleware(isUserAuth)
 	async deletePost(
 		@Arg('id', () => Int) id: number,
 	): Promise<boolean> {

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Password = void 0;
+exports.SaltPassword = exports.Password = void 0;
+const constants_1 = require("../../constants");
 exports.Password = (password, reenterPassword) => {
     if (reenterPassword != password) {
         return {
@@ -23,5 +24,8 @@ exports.Password = (password, reenterPassword) => {
         };
     }
     return null;
+};
+exports.SaltPassword = (password) => {
+    return password + constants_1.SALT;
 };
 //# sourceMappingURL=Password.js.map

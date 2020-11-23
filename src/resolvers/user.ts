@@ -12,7 +12,7 @@ import { UserDoesntExists } from '../utils/validation/UserDoesntExist';
 import { EmailExists } from '../utils/validation/EmailExists';
 import { sendEmail } from '../utils/sendEmail';
 import { v4 } from 'uuid';
-import { Password } from '../utils/validation/Password';
+import { Password, SaltPassword } from '../utils/validation/Password';
 import { getConnection } from 'typeorm';
 
 @Resolver()
@@ -54,7 +54,7 @@ export class UserResolver {
 		}
 		await User.update(
 			{ id: userIntId },
-			{ password: await argon2.hash(password) },
+			{ password: await argon2.hash(SaltPassword(password)) },
 		);
         // deletes key that enables the user with said key to reset password    
 		redis.del(key);
@@ -116,7 +116,7 @@ export class UserResolver {
 		if (emailExists) {
 			return emailExists;
 		}
-        const hashedPassword = await argon2.hash(input.password);
+        const hashedPassword = await argon2.hash(SaltPassword(input.password));
         let user;
         try {
             // const result = await User.create({
@@ -158,7 +158,7 @@ export class UserResolver {
 			return exists;
 		}
 
-		const verify = await argon2.verify(user!.password, password);
+		const verify = await argon2.verify(user!.password, SaltPassword(password));
 		if (!verify) {
 			return {
 				errors: [

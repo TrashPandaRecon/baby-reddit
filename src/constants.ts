@@ -5,3 +5,4 @@ export const SESSION_SECRET =
 export const TEST_EMAIL_ACCOUNT_USER = 'vhkr6s6n2cjrp6x7@ethereal.email';
 export const TEST_EMAIL_ACCOUNT_PASSWORD = 'g5PPQnc6QcxAwTsfvh';
 export const FORGET_PASSWORD_PREFIX = 'forgot-password:';
+export const SALT = 'ASFSDG!#%^@#$#@!SASD';

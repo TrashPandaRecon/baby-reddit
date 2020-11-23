@@ -1,0 +1,1 @@
+{"version":3,"file":"isUserAuth.js","sourceRoot":"","sources":["../../src/middleware/isUserAuth.ts"],"names":[],"mappings":";;;AAGa,QAAA,UAAU,GAA4B,CAAC,EAAC,OAAO,EAAC,EAAC,IAAI,EAAE,EAAE;IAElE,IAAI,CAAC,OAAO,CAAC,GAAG,CAAC,OAAQ,CAAC,MAAM,EAAE;QAC9B,MAAM,IAAI,KAAK,CAAC,oBAAoB,CAAC,CAAC;KACzC;IACD,OAAO,IAAI,EAAE,CAAC;AAClB,CAAC,CAAA"}

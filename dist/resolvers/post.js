@@ -24,6 +24,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostResolver = void 0;
 const type_graphql_1 = require("type-graphql");
 const Post_1 = require("../entities/Post");
+const isUserAuth_1 = require("../middleware/isUserAuth");
+const PostResponse_1 = require("../utils/responseModels/PostResponse");
+let PostInput = class PostInput {
+};
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], PostInput.prototype, "title", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], PostInput.prototype, "text", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], PostInput.prototype, "media", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], PostInput.prototype, "sub", void 0);
+PostInput = __decorate([
+    type_graphql_1.InputType()
+], PostInput);
 let PostResolver = class PostResolver {
     posts() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -33,19 +56,29 @@ let PostResolver = class PostResolver {
     post(id) {
         return Post_1.Post.findOne(id);
     }
-    createPost(title, post, media, sub) {
+    createPost(input, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return Post_1.Post.create({ title, post, media, sub }).save();
+            if (!input.sub) {
+                return {
+                    errors: [
+                        {
+                            field: "sub",
+                            message: "sub cannot be null"
+                        }
+                    ]
+                };
+            }
+            return Post_1.Post.create(Object.assign(Object.assign({}, input), { creatorId: req.session.userId })).save();
         });
     }
-    updatePost(id, title, post, media, sub) {
+    updatePost(id, details) {
         return __awaiter(this, void 0, void 0, function* () {
             const postExists = yield Post_1.Post.findOne(id);
             if (!postExists) {
                 return null;
             }
-            if (typeof title !== 'undefined') {
-                yield Post_1.Post.update({ id }, { title, post, media, sub });
+            if (typeof details.title !== 'undefined') {
+                yield Post_1.Post.update({ id }, details);
             }
             return postExists;
         });
@@ -76,28 +109,26 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PostResolver.prototype, "post", null);
 __decorate([
-    type_graphql_1.Mutation(() => Post_1.Post),
-    __param(0, type_graphql_1.Arg('title')),
-    __param(1, type_graphql_1.Arg('post')),
-    __param(2, type_graphql_1.Arg('media')),
-    __param(3, type_graphql_1.Arg('sub')),
+    type_graphql_1.Mutation(() => PostResponse_1.PostResponse),
+    type_graphql_1.UseMiddleware(isUserAuth_1.isUserAuth),
+    __param(0, type_graphql_1.Arg("input")),
+    __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, String]),
+    __metadata("design:paramtypes", [PostInput, Object]),
     __metadata("design:returntype", Promise)
 ], PostResolver.prototype, "createPost", null);
 __decorate([
     type_graphql_1.Mutation(() => Post_1.Post),
+    type_graphql_1.UseMiddleware(isUserAuth_1.isUserAuth),
     __param(0, type_graphql_1.Arg('id', () => type_graphql_1.Int)),
-    __param(1, type_graphql_1.Arg('title', () => String)),
-    __param(2, type_graphql_1.Arg('post')),
-    __param(3, type_graphql_1.Arg('media')),
-    __param(4, type_graphql_1.Arg('sub')),
+    __param(1, type_graphql_1.Arg("details")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, String, String, String, String]),
+    __metadata("design:paramtypes", [Number, PostInput]),
     __metadata("design:returntype", Promise)
 ], PostResolver.prototype, "updatePost", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
+    type_graphql_1.UseMiddleware(isUserAuth_1.isUserAuth),
     __param(0, type_graphql_1.Arg('id', () => type_graphql_1.Int)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
